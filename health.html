@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Health</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f6f7fb;
+        color: #111827;
+      }
+      header {
+        background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+        color: white;
+        padding: 10px 16px 22px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(2, 132, 199, 0.25);
+        border-bottom-left-radius: 18px;
+        border-bottom-right-radius: 18px;
+      }
+      header h1 {
+        margin: -4px 0 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        text-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+      }
+      header p {
+        margin: 10px auto 0;
+        max-width: 60ch;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1rem;
+      }
+      .header-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 4px;
+      }
+      .icon-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.22);
+        color: #fff;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease;
+      }
+      .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+      .icon-btn:active {
+        transform: scale(0.96);
+      }
+      .icon-btn svg {
+        width: 22px;
+        height: 22px;
+      }
+      .profile-wrap {
+        position: relative;
+      }
+      .profile-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        min-width: 268px;
+        max-width: min(92vw, 320px);
+        padding: 10px 0 8px;
+        margin: 0;
+        background: #fff;
+        color: #111827;
+        border-radius: 12px;
+        box-shadow: 0 14px 44px rgba(15, 23, 42, 0.18);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        z-index: 50;
+        text-align: left;
+      }
+      .profile-menu-tile {
+        margin: 8px 10px 10px;
+        padding: 16px 14px 14px;
+        border-radius: 12px;
+        background: linear-gradient(
+          160deg,
+          #e0f2fe 0%,
+          #dbeafe 55%,
+          #eff6ff 100%
+        );
+        border: 1px solid rgba(14, 165, 233, 0.35);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.75),
+          0 4px 14px rgba(14, 165, 233, 0.12);
+      }
+      .profile-menu-greeting {
+        margin: 0 0 6px;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        color: #0c4a6e;
+        letter-spacing: 0.02em;
+      }
+      .profile-menu-hint {
+        margin: 0 0 14px;
+        font-size: 0.8125rem;
+        line-height: 1.45;
+        color: #0369a1;
+      }
+      .profile-signup-btn {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 10px;
+        font: inherit;
+        font-size: 0.9375rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        cursor: pointer;
+        background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+        box-shadow:
+          0 4px 0 #0369a1,
+          0 8px 20px rgba(14, 165, 233, 0.45);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.2s ease,
+          filter 0.15s ease;
+      }
+      .profile-signup-btn:hover {
+        filter: brightness(1.05);
+        box-shadow:
+          0 4px 0 #0369a1,
+          0 10px 24px rgba(14, 165, 233, 0.5);
+      }
+      .profile-signup-btn:active {
+        transform: translateY(2px);
+        box-shadow:
+          0 2px 0 #0369a1,
+          0 4px 14px rgba(14, 165, 233, 0.4);
+      }
+      .profile-menu-tile + .profile-menu-item {
+        border-top: 1px solid #e5e7eb;
+      }
+      .profile-menu-item {
+        display: block;
+        padding: 12px 16px;
+        font-size: 0.9375rem;
+        color: #111827;
+        text-decoration: none;
+        line-height: 1.35;
+        transition: background 0.15s ease;
+      }
+      .profile-menu-item:hover,
+      .profile-menu-item:focus {
+        background: #f3f4f6;
+        outline: none;
+      }
+      .profile-menu-item + .profile-menu-item {
+        border-top: 1px solid #e5e7eb;
+      }
+      .cart-wrap {
+        position: relative;
+      }
+      .cart-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        min-width: 268px;
+        max-width: min(92vw, 320px);
+        padding: 10px 0 8px;
+        margin: 0;
+        background: #fff;
+        color: #111827;
+        border-radius: 12px;
+        box-shadow: 0 14px 44px rgba(15, 23, 42, 0.18);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        z-index: 50;
+        text-align: left;
+      }
+      .cart-empty-tile {
+        box-sizing: border-box;
+        width: auto;
+        margin: 8px 10px 10px;
+        padding: 16px 14px 14px;
+        border-radius: 12px;
+        background: linear-gradient(
+          165deg,
+          #f8fafc 0%,
+          #f1f5f9 50%,
+          #e2e8f0 100%
+        );
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          0 4px 14px rgba(15, 23, 42, 0.06);
+        text-align: center;
+      }
+      .cart-empty-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: rgba(14, 165, 233, 0.12);
+        color: #0284c7;
+      }
+      .cart-empty-icon svg {
+        width: 26px;
+        height: 26px;
+      }
+      .cart-empty-title {
+        margin: 0 0 6px;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: 0.02em;
+      }
+      .cart-empty-hint {
+        margin: 0;
+        font-size: 0.8125rem;
+        line-height: 1.45;
+        color: #64748b;
+      }
+      .cart-items-panel {
+        margin: 0 10px;
+        padding: 8px 4px 4px;
+        font-size: 0.9375rem;
+        color: #334155;
+      }
+      .cart-items-title {
+        margin: 0 0 8px;
+        font-weight: 600;
+      }
+      .cart-items-placeholder {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+      .cart-items-panel[hidden] {
+        display: none !important;
+      }
+      .cart-empty-tile[hidden] {
+        display: none !important;
+      }
+      .search-strip {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: min(42vh, 280px);
+        padding: 24px 16px;
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 560px;
+        background: linear-gradient(180deg, #ffffff 0%, #f3f4f6 100%);
+        border-radius: 9999px;
+        padding: 6px 8px 6px 22px;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        box-shadow:
+          0 8px 24px rgba(14, 165, 233, 0.12),
+          inset 0 2px 4px rgba(255, 255, 255, 0.95),
+          inset 0 -3px 8px rgba(15, 23, 42, 0.06);
+      }
+      .search-bar:focus-within {
+        box-shadow:
+          0 10px 28px rgba(14, 165, 233, 0.2),
+          inset 0 2px 4px rgba(255, 255, 255, 0.95),
+          inset 0 -3px 8px rgba(15, 23, 42, 0.06),
+          0 0 0 3px rgba(14, 165, 233, 0.25);
+      }
+      .search-bar input[type="search"] {
+        flex: 1;
+        min-width: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 1rem;
+        padding: 12px 10px 12px 0;
+        color: #111827;
+      }
+      .search-bar input[type="search"]::placeholder {
+        color: #9ca3af;
+      }
+      .search-submit {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
+      }
+      .search-submit:hover {
+        box-shadow: 0 6px 16px rgba(14, 165, 233, 0.45);
+      }
+      .search-submit:active {
+        transform: scale(0.96);
+      }
+      .search-submit svg {
+        width: 22px;
+        height: 22px;
+      }
+      .category-tiles-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 16px 40px;
+      }
+      .category-tiles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        align-items: stretch;
+      }
+      @media (max-width: 768px) {
+        .category-tiles {
+          grid-template-columns: 1fr;
+        }
+      }
+      .category-tile {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(15, 23, 42, 0.06);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .category-tile:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(14, 165, 233, 0.14);
+      }
+      .category-tile:focus-visible {
+        outline: none;
+        box-shadow:
+          0 0 0 3px #fff,
+          0 0 0 6px rgba(14, 165, 233, 0.45);
+      }
+      .category-tile-image-wrap {
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        background: #e2e8f0;
+      }
+      .category-tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .category-tile-title {
+        margin: 0;
+        padding: 14px 16px 16px;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        color: #0c4a6e;
+        text-align: center;
+      }
+      footer {
+        text-align: center;
+        padding: 16px;
+        color: #6b7280;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-actions">
+        <div class="profile-wrap">
+          <button
+            type="button"
+            class="icon-btn"
+            id="profile-menu-btn"
+            aria-label="Account menu"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="profile-menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </button>
+          <div
+            id="profile-menu"
+            class="profile-menu"
+            role="region"
+            aria-label="Account options"
+            hidden
+          >
+            <div class="profile-menu-tile">
+              <p class="profile-menu-greeting">Hello User</p>
+              <p class="profile-menu-hint">To access your health account</p>
+              <a href="signup.html" class="profile-signup-btn">Sign UP</a>
+            </div>
+            <a href="#register" class="profile-menu-item">user login</a>
+            <a href="#developer" class="profile-menu-item">Developer</a>
+          </div>
+        </div>
+        <div class="cart-wrap">
+          <button
+            type="button"
+            class="icon-btn"
+            id="cart-menu-btn"
+            aria-label="Shopping cart"
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-controls="cart-menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path
+                d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+              />
+            </svg>
+          </button>
+          <div
+            id="cart-menu"
+            class="cart-menu"
+            role="region"
+            aria-label="Cart preview"
+            hidden
+          >
+            <div id="cart-empty-panel" class="cart-empty-tile">
+              <div class="cart-empty-icon" aria-hidden="true">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="9" cy="21" r="1" />
+                  <circle cx="20" cy="21" r="1" />
+                  <path
+                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                  />
+                </svg>
+              </div>
+              <p class="cart-empty-title">Cart is empty</p>
+              <p class="cart-empty-hint">
+                Nothing added yet. Browse products and add them here.
+              </p>
+            </div>
+            <div id="cart-items-panel" class="cart-items-panel" hidden>
+              <p id="cart-items-summary" class="cart-items-title">Your cart</p>
+              <p class="cart-items-placeholder">
+                Item list will appear when you add products.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h1>Health</h1>
+      <p>"We Care for Your Health"</p>
+    </header>
+
+    <section class="search-strip" aria-label="Search">
+      <form class="search-bar" role="search" action="#" method="get">
+        <label for="site-search" class="visually-hidden">Search</label>
+        <input
+          type="search"
+          id="site-search"
+          name="q"
+          placeholder="Search food products, vitamins, health services…"
+          autocomplete="off"
+        />
+        <button type="submit" class="search-submit" aria-label="Submit search">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </button>
+      </form>
+    </section>
+
+    <section class="category-tiles-wrap" aria-label="Browse categories">
+      <div class="category-tiles">
+        <a class="category-tile" href="#food-products">
+          <div class="category-tile-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
+              alt="Fresh vegetables and healthy food products"
+              width="800"
+              height="600"
+              loading="lazy"
+            />
+          </div>
+          <h2 class="category-tile-title">Food products</h2>
+        </a>
+        <a class="category-tile" href="#vitamins">
+          <div class="category-tile-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80"
+              alt="Vitamin tablets and supplements"
+              width="800"
+              height="600"
+              loading="lazy"
+            />
+          </div>
+          <h2 class="category-tile-title">Vitamins &amp; tablets</h2>
+        </a>
+        <a class="category-tile" href="#health-consulting">
+          <div class="category-tile-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"
+              alt="Health professional consulting with a patient"
+              width="800"
+              height="600"
+              loading="lazy"
+            />
+          </div>
+          <h2 class="category-tile-title">Health consulting</h2>
+        </a>
+      </div>
+    </section>
+
+    <footer>Copyright &copy; <span id="year"></span></footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      (function () {
+        const wrap = document.querySelector(".profile-wrap");
+        const btn = document.getElementById("profile-menu-btn");
+        const menu = document.getElementById("profile-menu");
+        if (!wrap || !btn || !menu) return;
+
+        function closeMenu() {
+          menu.hidden = true;
+          btn.setAttribute("aria-expanded", "false");
+        }
+
+        function openMenu() {
+          menu.hidden = false;
+          btn.setAttribute("aria-expanded", "true");
+        }
+
+        function toggleMenu() {
+          if (menu.hidden) openMenu();
+          else closeMenu();
+        }
+
+        const hoverMedia = window.matchMedia("(hover: hover)");
+        let hoverCloseTimer = 0;
+
+        function armHoverClose() {
+          clearTimeout(hoverCloseTimer);
+          hoverCloseTimer = window.setTimeout(() => closeMenu(), 120);
+        }
+
+        function cancelHoverClose() {
+          clearTimeout(hoverCloseTimer);
+        }
+
+        if (hoverMedia.matches) {
+          wrap.addEventListener("mouseenter", () => {
+            cancelHoverClose();
+            openMenu();
+          });
+          wrap.addEventListener("mouseleave", () => {
+            armHoverClose();
+          });
+        }
+
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleMenu();
+        });
+
+        document.addEventListener("click", () => closeMenu());
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !menu.hidden) closeMenu();
+        });
+      })();
+
+      (function () {
+        const wrap = document.querySelector(".cart-wrap");
+        const btn = document.getElementById("cart-menu-btn");
+        const menu = document.getElementById("cart-menu");
+        const emptyPanel = document.getElementById("cart-empty-panel");
+        const itemsPanel = document.getElementById("cart-items-panel");
+        const itemsSummary = document.getElementById("cart-items-summary");
+        if (!wrap || !btn || !menu || !emptyPanel || !itemsPanel) return;
+
+        let cartItemCount = 0;
+
+        function syncCartPanels() {
+          const isEmpty = cartItemCount <= 0;
+          emptyPanel.hidden = !isEmpty;
+          itemsPanel.hidden = isEmpty;
+          if (!isEmpty && itemsSummary) {
+            itemsSummary.textContent =
+              cartItemCount === 1
+                ? "1 item in your cart"
+                : `${cartItemCount} items in your cart`;
+          }
+        }
+
+        function closeCartMenu() {
+          menu.hidden = true;
+          btn.setAttribute("aria-expanded", "false");
+        }
+
+        function openCartMenu() {
+          syncCartPanels();
+          menu.hidden = false;
+          btn.setAttribute("aria-expanded", "true");
+        }
+
+        function toggleCartMenu() {
+          if (menu.hidden) openCartMenu();
+          else closeCartMenu();
+        }
+
+        const hoverMedia = window.matchMedia("(hover: hover)");
+        let hoverCloseTimer = 0;
+
+        function armHoverClose() {
+          clearTimeout(hoverCloseTimer);
+          hoverCloseTimer = window.setTimeout(() => closeCartMenu(), 120);
+        }
+
+        function cancelHoverClose() {
+          clearTimeout(hoverCloseTimer);
+        }
+
+        if (hoverMedia.matches) {
+          wrap.addEventListener("mouseenter", () => {
+            cancelHoverClose();
+            openCartMenu();
+          });
+          wrap.addEventListener("mouseleave", () => {
+            armHoverClose();
+          });
+        }
+
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleCartMenu();
+        });
+
+        document.addEventListener("click", () => closeCartMenu());
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !menu.hidden) closeCartMenu();
+        });
+
+        window.healthCart = {
+          getCount() {
+            return cartItemCount;
+          },
+          setCount(n) {
+            cartItemCount = Math.max(0, Number(n) || 0);
+            syncCartPanels();
+          },
+        };
+
+        syncCartPanels();
+      })();
+    </script>
+  </body>
+</html>
