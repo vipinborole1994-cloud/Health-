@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sign up — Health</title>
+    <title>User Login — Health</title>
     <style>
       * {
         box-sizing: border-box;
@@ -94,20 +94,20 @@
         margin: 0 auto;
         padding: 28px 16px 48px;
       }
-      .signup-card {
+      .login-card {
         background: #fff;
         border-radius: 16px;
         padding: 24px 20px 28px;
         box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
         border: 1px solid rgba(15, 23, 42, 0.06);
       }
-      .signup-card h2 {
+      .login-card h2 {
         margin: 0 0 10px;
         font-size: 1.25rem;
         font-weight: 700;
         color: #0c4a6e;
       }
-      .signup-card .lead {
+      .login-card .lead {
         margin: 0 0 22px;
         font-size: 0.9375rem;
         line-height: 1.55;
@@ -305,7 +305,7 @@
       .link-back:hover {
         color: #0369a1;
       }
-      .otp-success {
+      .login-success {
         margin-top: 14px;
         font-size: 0.9375rem;
         font-weight: 600;
@@ -338,21 +338,21 @@
       <div class="header-shell">
         <div class="header-inner">
           <a class="back-link" href="health.html">← Back to Health</a>
-          <h2>sign up to view your account</h2>
+          <h1>User Login</h1>
         </div>
       </div>
     </header>
 
     <main>
-      <div class="signup-card">
-        <div id="signup-step-phone">
-          <h2>Sign up with mobile number</h2>
+      <div class="login-card">
+        <div id="login-step-phone">
+          <h2>Login with mobile number</h2>
           <p class="lead">
-            Enter your mobile number with country code. We’ll use it to verify
-            your account and keep your health orders secure.
+            Enter your mobile number. We'll send you an OTP to verify your
+            identity.
           </p>
 
-          <form id="signup-phone-form" action="#" method="post">
+          <form id="login-phone-form" action="#" method="post">
             <label class="mobile-label" for="mobile">Mobile number</label>
             <div class="phone-row">
               <div class="country-select-wrap">
@@ -402,15 +402,15 @@
             <button
               type="submit"
               class="submit-btn"
-              id="signup-continue"
+              id="login-continue"
               disabled
             >
-              Continue
+              Send OTP
             </button>
           </form>
         </div>
 
-        <div id="signup-step-otp" hidden>
+        <div id="login-step-otp" hidden>
           <h2>Verify your number</h2>
           <p class="lead">Enter the 4 digit OTP sent on your device.</p>
           <p id="otp-sent-to" class="otp-device-hint" aria-live="polite"></p>
@@ -475,8 +475,8 @@
             role="alert"
             aria-live="polite"
           ></p>
-          <button type="button" class="submit-btn" id="otp-verify" disabled>
-            Verify
+          <button type="button" class="submit-btn" id="otp-login" disabled>
+            Verify & Login
           </button>
           <button
             type="button"
@@ -486,7 +486,7 @@
           >
             Resend OTP
           </button>
-          <p id="otp-success" class="otp-success" hidden role="status"></p>
+          <p id="login-success" class="login-success" hidden role="status"></p>
           <button type="button" class="link-back" id="otp-change-number">
             Change mobile number
           </button>
@@ -496,13 +496,13 @@
 
     <script>
       (function () {
-        const form = document.getElementById("signup-phone-form");
-        const stepPhone = document.getElementById("signup-step-phone");
-        const stepOtp = document.getElementById("signup-step-otp");
+        const form = document.getElementById("login-phone-form");
+        const stepPhone = document.getElementById("login-step-phone");
+        const stepOtp = document.getElementById("login-step-otp");
         const mobile = document.getElementById("mobile");
         const countryCode = document.getElementById("country-code");
         const errorEl = document.getElementById("mobile-error");
-        const submitBtn = document.getElementById("signup-continue");
+        const submitBtn = document.getElementById("login-continue");
         const otpSentTo = document.getElementById("otp-sent-to");
         if (
           !form ||
@@ -594,16 +594,16 @@
       })();
 
       (function () {
-        const stepPhone = document.getElementById("signup-step-phone");
-        const stepOtp = document.getElementById("signup-step-otp");
+        const stepPhone = document.getElementById("login-step-phone");
+        const stepOtp = document.getElementById("login-step-otp");
         const cells = Array.from(document.querySelectorAll(".otp-cell"));
-        const verifyBtn = document.getElementById("otp-verify");
+        const loginBtn = document.getElementById("otp-login");
         const resendBtn = document.getElementById("otp-resend");
         const otpError = document.getElementById("otp-error");
         const changeNumberBtn = document.getElementById("otp-change-number");
-        const otpSuccess = document.getElementById("otp-success");
+        const loginSuccess = document.getElementById("login-success");
         const timerDisplay = document.getElementById("otp-timer");
-        if (!cells.length || !verifyBtn || !stepPhone || !stepOtp) return;
+        if (!cells.length || !loginBtn || !stepPhone || !stepOtp) return;
 
         let timerInterval = null;
         let timeRemaining = 0;
@@ -643,7 +643,7 @@
             c.classList.remove("otp-invalid");
           });
           const len = getOtpString().length;
-          verifyBtn.disabled = len !== 4;
+          loginBtn.disabled = len !== 4;
           if (otpError) otpError.textContent = "";
         }
 
@@ -696,13 +696,12 @@
           });
         });
 
-        verifyBtn.addEventListener("click", () => {
+        loginBtn.addEventListener("click", () => {
           if (getOtpString().length !== 4) return;
           if (otpError) otpError.textContent = "";
-          if (otpSuccess) {
-            otpSuccess.textContent =
-              "Your account created you are successfully logged in!";
-            otpSuccess.hidden = false;
+          if (loginSuccess) {
+            loginSuccess.textContent = "Successfully logged in!";
+            loginSuccess.hidden = false;
           }
         });
 
@@ -711,11 +710,11 @@
             c.value = "";
             c.classList.remove("otp-invalid");
           });
-          verifyBtn.disabled = true;
+          loginBtn.disabled = true;
           if (otpError) otpError.textContent = "";
-          if (otpSuccess) {
-            otpSuccess.textContent = "";
-            otpSuccess.hidden = true;
+          if (loginSuccess) {
+            loginSuccess.textContent = "";
+            loginSuccess.hidden = true;
           }
           startTimer();
           cells[0].focus();
@@ -727,11 +726,11 @@
             c.value = "";
             c.classList.remove("otp-invalid");
           });
-          verifyBtn.disabled = true;
+          loginBtn.disabled = true;
           if (otpError) otpError.textContent = "";
-          if (otpSuccess) {
-            otpSuccess.textContent = "";
-            otpSuccess.hidden = true;
+          if (loginSuccess) {
+            loginSuccess.textContent = "";
+            loginSuccess.hidden = true;
           }
           stepOtp.hidden = true;
           stepPhone.hidden = false;
@@ -739,8 +738,8 @@
         });
 
         // Start timer when OTP screen is shown
-        const originalStepPhone = document.getElementById("signup-step-phone");
-        const originalForm = document.getElementById("signup-phone-form");
+        const originalStepPhone = document.getElementById("login-step-phone");
+        const originalForm = document.getElementById("login-phone-form");
         if (originalForm) {
           originalForm.addEventListener("submit", (e) => {
             if (!stepOtp.hidden) return;
