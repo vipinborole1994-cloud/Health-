@@ -447,6 +447,7 @@
               <a href="signup.html" class="profile-signup-btn">Sign UP</a>
             </div>
             <a href="userLogin.html" class="profile-menu-item">User Login</a>
+            <a href="superadmin.html" class="profile-menu-item">Super Admin</a>
             <a href="#developer" class="profile-menu-item">Developer</a>
           </div>
         </div>
@@ -520,7 +521,7 @@
       <p>"We Care for Your Health"</p>
     </header>
 
-    <section class="search-strip" aria-label="Search">
+    <section class="search-strip" id="top-search-section" aria-label="Search">
       <form
         class="search-bar"
         id="site-search-form"
@@ -557,7 +558,7 @@
 
     <section class="category-tiles-wrap" aria-label="Browse categories">
       <div class="category-tiles">
-        <a class="category-tile" href="food.html">
+        <a class="category-tile" id="food-section" href="food.html">
           <div class="category-tile-image-wrap">
             <img
               src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
@@ -569,7 +570,7 @@
           </div>
           <h2 class="category-tile-title">Food products</h2>
         </a>
-        <a class="category-tile" href="vitamins.html">
+        <a class="category-tile" id="vitamins-section" href="vitamins.html">
           <div class="category-tile-image-wrap">
             <img
               src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80"
@@ -581,7 +582,11 @@
           </div>
           <h2 class="category-tile-title">Vitamins &amp; tablets</h2>
         </a>
-        <a class="category-tile" href="health-consulting.html">
+        <a
+          class="category-tile"
+          id="consulting-section"
+          href="health-consulting.html"
+        >
           <div class="category-tile-image-wrap">
             <img
               src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80"
@@ -789,6 +794,22 @@
             );
           });
         }
+      })();
+
+      (function () {
+        const settings = [
+          { key: "superAdmin:showFood", selector: "#food-section" },
+          { key: "superAdmin:showVitamins", selector: "#vitamins-section" },
+          { key: "superAdmin:showConsulting", selector: "#consulting-section" },
+          { key: "superAdmin:showSearch", selector: "#top-search-section" },
+        ];
+
+        settings.forEach(({ key, selector }) => {
+          const value = localStorage.getItem(key);
+          const section = document.querySelector(selector);
+          if (!section) return;
+          section.hidden = value === "false";
+        });
       })();
     </script>
   </body>
