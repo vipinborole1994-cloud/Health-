@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Health Consulting</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f6f7fb;
+        color: #111827;
+      }
+      header {
+        background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+        color: white;
+        padding: 24px 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(2, 132, 199, 0.25);
+      }
+      header h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+      }
+      header p {
+        margin: 12px auto 0;
+        max-width: 54ch;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1rem;
+      }
+      .page-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin: 20px auto 0;
+      }
+      .link-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 700;
+        color: #0f172a;
+        background: #e2e8f0;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        transition:
+          transform 0.15s ease,
+          background 0.15s ease;
+      }
+      .link-button:hover {
+        background: #dbeafe;
+        transform: translateY(-1px);
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 680px;
+        margin: 18px auto 0;
+        background: #fff;
+        border-radius: 9999px;
+        padding: 8px 14px;
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      }
+      .search-bar input[type="search"] {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 1rem;
+        padding: 12px 10px;
+        color: #111827;
+      }
+      .search-bar input[type="search"]::placeholder {
+        color: #94a3b8;
+      }
+      .search-submit {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
+      }
+      .consult-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+      }
+      .consult-card-body {
+        padding: 18px;
+      }
+      .consult-card-title {
+        margin: 0 0 10px;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      .consult-card-text {
+        margin: 0;
+        color: #475569;
+        line-height: 1.6;
+      }
+      .content {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      @media (max-width: 840px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .search-feedback {
+        margin: 12px auto 0;
+        max-width: 680px;
+        color: #0f172a;
+        text-align: center;
+      }
+      footer {
+        text-align: center;
+        padding: 18px 16px 32px;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Health Consulting</h1>
+      <p>
+        Book a consultation, get personalized health advice, and connect with
+        experts.
+      </p>
+      <div class="page-actions">
+        <a class="link-button" href="health.html">Back to Home</a>
+      </div>
+      <form class="search-bar" id="consult-search-form" role="search">
+        <label for="consult-search" class="visually-hidden"
+          >Search consulting services</label
+        >
+        <input
+          type="search"
+          id="consult-search"
+          name="consult-search"
+          placeholder="Search consulting services on this page…"
+          autocomplete="off"
+        />
+        <button type="submit" class="search-submit" aria-label="Submit search">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </button>
+      </form>
+      <p id="consult-search-feedback" class="search-feedback" hidden></p>
+    </header>
+
+    <main class="content">
+      <div class="grid">
+        <article class="consult-card">
+          <div class="consult-card-body">
+            <h2 class="consult-card-title">Nutrition Consultation</h2>
+            <p class="consult-card-text">
+              One-on-one advice to build a meal plan that matches your wellness
+              goals.
+            </p>
+          </div>
+        </article>
+        <article class="consult-card">
+          <div class="consult-card-body">
+            <h2 class="consult-card-title">Fitness Assessment</h2>
+            <p class="consult-card-text">
+              Personalized training recommendations based on your lifestyle and
+              health data.
+            </p>
+          </div>
+        </article>
+        <article class="consult-card">
+          <div class="consult-card-body">
+            <h2 class="consult-card-title">Wellness Coaching</h2>
+            <p class="consult-card-text">
+              Ongoing support to develop healthier habits and manage stress
+              effectively.
+            </p>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <footer>Copyright &copy; <span id="year"></span></footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      (function () {
+        const form = document.getElementById("consult-search-form");
+        const input = document.getElementById("consult-search");
+        const feedback = document.getElementById("consult-search-feedback");
+        const cards = Array.from(document.querySelectorAll(".consult-card"));
+
+        function updateFeedback(message, hidden = false) {
+          if (!feedback) return;
+          feedback.textContent = message;
+          feedback.hidden = hidden;
+        }
+
+        if (form && input && feedback) {
+          form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const searchTerm = input.value.trim().toLowerCase();
+            if (!searchTerm) {
+              cards.forEach((card) => {
+                card.hidden = false;
+              });
+              updateFeedback("", true);
+              return;
+            }
+
+            let found = false;
+            cards.forEach((card) => {
+              const text = card.textContent.toLowerCase();
+              const matches = text.includes(searchTerm);
+              card.hidden = !matches;
+              if (matches) found = true;
+            });
+
+            updateFeedback(
+              found
+                ? `Showing results for "${input.value}".`
+                : `No consulting services found for "${input.value}".`,
+              false,
+            );
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vitamins & Tablets</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f6f7fb;
+        color: #111827;
+      }
+      header {
+        background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+        color: white;
+        padding: 24px 20px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(2, 132, 199, 0.25);
+      }
+      header h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 800;
+      }
+      header p {
+        margin: 12px auto 0;
+        max-width: 54ch;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1rem;
+      }
+      .page-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin: 20px auto 0;
+      }
+      .link-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 18px;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 700;
+        color: #0f172a;
+        background: #e2e8f0;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        transition:
+          transform 0.15s ease,
+          background 0.15s ease;
+      }
+      .link-button:hover {
+        background: #dbeafe;
+        transform: translateY(-1px);
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 680px;
+        margin: 18px auto 0;
+        background: #fff;
+        border-radius: 9999px;
+        padding: 8px 14px;
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      }
+      .search-bar input[type="search"] {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 1rem;
+        padding: 12px 10px;
+        color: #111827;
+      }
+      .search-bar input[type="search"]::placeholder {
+        color: #94a3b8;
+      }
+      .search-submit {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
+      }
+      .product-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(15, 23, 42, 0.08);
+      }
+      .product-card img {
+        width: 100%;
+        display: block;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+      }
+      .product-card-body {
+        padding: 18px;
+      }
+      .product-card-title {
+        margin: 0 0 10px;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      .product-card-text {
+        margin: 0;
+        color: #475569;
+        line-height: 1.6;
+      }
+      .content {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 24px 16px 40px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      @media (max-width: 840px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .search-feedback {
+        margin: 12px auto 0;
+        max-width: 680px;
+        color: #0f172a;
+        text-align: center;
+      }
+      footer {
+        text-align: center;
+        padding: 18px 16px 32px;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Vitamins & Tablets</h1>
+      <p>
+        Find balanced vitamins, supplements, and daily tablets to support your
+        health routine.
+      </p>
+      <div class="page-actions">
+        <a class="link-button" href="health.html">Back to Home</a>
+      </div>
+      <form class="search-bar" id="vitamin-search-form" role="search">
+        <label for="vitamin-search" class="visually-hidden"
+          >Search vitamins</label
+        >
+        <input
+          type="search"
+          id="vitamin-search"
+          name="vitamin-search"
+          placeholder="Search vitamins and tablets on this page…"
+          autocomplete="off"
+        />
+        <button type="submit" class="search-submit" aria-label="Submit search">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </button>
+      </form>
+      <p id="vitamin-search-feedback" class="search-feedback" hidden></p>
+    </header>
+
+    <main class="content">
+      <div class="grid">
+        <article class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=900&q=80"
+            alt="Vitamin C tablets"
+            loading="lazy"
+          />
+          <div class="product-card-body">
+            <h2 class="product-card-title">Vitamin C Tablets</h2>
+            <p class="product-card-text">
+              Immune support formula with 1000mg of vitamin C and antioxidants.
+            </p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1514996937319-344454492b37?w=900&q=80"
+            alt="Multivitamin supplement bottles"
+            loading="lazy"
+          />
+          <div class="product-card-body">
+            <h2 class="product-card-title">Daily Multivitamin</h2>
+            <p class="product-card-text">
+              One daily tablet with essential vitamins, minerals, and B-complex.
+            </p>
+          </div>
+        </article>
+        <article class="product-card">
+          <img
+            src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=900&q=80"
+            alt="Vitamin D supplements"
+            loading="lazy"
+          />
+          <div class="product-card-body">
+            <h2 class="product-card-title">Vitamin D3</h2>
+            <p class="product-card-text">
+              Supports bone health and mood with easy-to-take softgel tablets.
+            </p>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <footer>Copyright &copy; <span id="year"></span></footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      (function () {
+        const form = document.getElementById("vitamin-search-form");
+        const input = document.getElementById("vitamin-search");
+        const feedback = document.getElementById("vitamin-search-feedback");
+        const cards = Array.from(document.querySelectorAll(".product-card"));
+
+        function updateFeedback(message, hidden = false) {
+          if (!feedback) return;
+          feedback.textContent = message;
+          feedback.hidden = hidden;
+        }
+
+        if (form && input && feedback) {
+          form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const searchTerm = input.value.trim().toLowerCase();
+            if (!searchTerm) {
+              cards.forEach((card) => {
+                card.hidden = false;
+              });
+              updateFeedback("", true);
+              return;
+            }
+
+            let found = false;
+            cards.forEach((card) => {
+              const text = card.textContent.toLowerCase();
+              const matches = text.includes(searchTerm);
+              card.hidden = !matches;
+              if (matches) found = true;
+            });
+
+            updateFeedback(
+              found
+                ? `Showing results for "${input.value}".`
+                : `No vitamins found for "${input.value}".`,
+              false,
+            );
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
