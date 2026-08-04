@@ -324,6 +324,13 @@
         width: 22px;
         height: 22px;
       }
+      .search-feedback {
+        margin: 12px auto 0;
+        max-width: 560px;
+        color: #0f172a;
+        font-size: 0.95rem;
+        text-align: center;
+      }
       .category-tiles-wrap {
         max-width: 1100px;
         margin: 0 auto;
@@ -514,7 +521,13 @@
     </header>
 
     <section class="search-strip" aria-label="Search">
-      <form class="search-bar" role="search" action="#" method="get">
+      <form
+        class="search-bar"
+        id="site-search-form"
+        role="search"
+        action="#"
+        method="get"
+      >
         <label for="site-search" class="visually-hidden">Search</label>
         <input
           type="search"
@@ -539,11 +552,12 @@
           </svg>
         </button>
       </form>
+      <p id="search-feedback" class="search-feedback" hidden></p>
     </section>
 
     <section class="category-tiles-wrap" aria-label="Browse categories">
       <div class="category-tiles">
-        <a class="category-tile" href="#food-products">
+        <a class="category-tile" href="food.html">
           <div class="category-tile-image-wrap">
             <img
               src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
@@ -725,6 +739,56 @@
         };
 
         syncCartPanels();
+      })();
+
+      (function () {
+        const form = document.getElementById("site-search-form");
+        const input = document.getElementById("site-search");
+        const feedback = document.getElementById("search-feedback");
+        const categories = [
+          {
+            keywords: ["food", "vegetable", "salad", "snack", "meal", "recipe"],
+            href: "food.html",
+          },
+          {
+            keywords: ["vitamin", "tablet", "supplement", "nutrition"],
+            href: "health.html#vitamins",
+          },
+          {
+            keywords: ["consult", "consulting", "doctor", "health advice"],
+            href: "health.html#health-consulting",
+          },
+        ];
+
+        function showFeedback(message) {
+          if (!feedback) return;
+          feedback.textContent = message;
+          feedback.hidden = false;
+        }
+
+        if (form && input && feedback) {
+          form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const query = input.value.trim().toLowerCase();
+            if (!query) {
+              showFeedback("Please enter a product name to search.");
+              return;
+            }
+
+            const found = categories.find((category) =>
+              category.keywords.some((keyword) => query.includes(keyword)),
+            );
+
+            if (found) {
+              window.location.href = found.href;
+              return;
+            }
+
+            showFeedback(
+              `No results found for "${input.value}". Try searching for food products, vitamins, or health consulting.`,
+            );
+          });
+        }
       })();
     </script>
   </body>
