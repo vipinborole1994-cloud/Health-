@@ -147,6 +147,14 @@
             Show
           </label>
         </div>
+        <div class="toggle-row">
+          <p class="toggle-label">Developer option in profile menu</p>
+          <div class="toggle-control">
+            <button type="button" class="btn btn-reset" id="toggle-developer">
+              Show Developer option
+            </button>
+          </div>
+        </div>
 
         <div class="actions">
           <button type="button" class="btn btn-save" id="save-settings">
@@ -168,6 +176,7 @@
         vitamins: "superAdmin:showVitamins",
         consulting: "superAdmin:showConsulting",
         search: "superAdmin:showSearch",
+        developer: "superAdmin:showDeveloper",
       };
 
       const controls = {
@@ -177,6 +186,7 @@
         search: document.getElementById("toggle-search"),
       };
 
+      const developerButton = document.getElementById("toggle-developer");
       const status = document.getElementById("status-message");
 
       function getStoredValue(key) {
@@ -184,22 +194,49 @@
         return value === null ? true : value === "true";
       }
 
+      function setDeveloperButtonState(isVisible) {
+        if (!developerButton) return;
+        developerButton.textContent = isVisible
+          ? "Hide Developer option"
+          : "Show Developer option";
+        developerButton.dataset.visible = isVisible ? "true" : "false";
+      }
+
       function loadSettings() {
         Object.entries(keys).forEach(([section, key]) => {
+          if (section === "developer") return;
           const checkbox = controls[section];
           if (!checkbox) return;
           checkbox.checked = getStoredValue(key);
         });
+        setDeveloperButtonState(getStoredValue(keys.developer));
       }
 
       function saveSettings() {
         Object.entries(keys).forEach(([section, key]) => {
+          if (section === "developer") return;
           const checkbox = controls[section];
           if (!checkbox) return;
           localStorage.setItem(key, checkbox.checked ? "true" : "false");
         });
+        if (developerButton) {
+          localStorage.setItem(
+            keys.developer,
+            developerButton.dataset.visible === "true" ? "true" : "false",
+          );
+        }
         status.textContent =
           "Settings saved. Refresh the Health app to apply changes.";
+      }
+
+      function toggleDeveloperOption() {
+        if (!developerButton) return;
+        const isVisible = developerButton.dataset.visible !== "true";
+        setDeveloperButtonState(isVisible);
+        localStorage.setItem(keys.developer, isVisible ? "true" : "false");
+        status.textContent = isVisible
+          ? "Developer option is now visible in the profile menu."
+          : "Developer option has been removed from the profile menu.";
       }
 
       function resetSettings() {
@@ -214,6 +251,9 @@
       document
         .getElementById("reset-settings")
         .addEventListener("click", resetSettings);
+      if (developerButton) {
+        developerButton.addEventListener("click", toggleDeveloperOption);
+      }
 
       loadSettings();
     </script>

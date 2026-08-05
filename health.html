@@ -810,6 +810,18 @@
           if (!section) return;
           section.hidden = value === "false";
         });
+
+        const developerMenuItem = Array.from(
+          document.querySelectorAll(".profile-menu-item"),
+        ).find((item) => item.getAttribute("href") === "#developer");
+        const developerVisible = localStorage.getItem(
+          "superAdmin:showDeveloper",
+        );
+        if (developerMenuItem) {
+          const shouldHide = developerVisible === "false";
+          developerMenuItem.hidden = shouldHide;
+          developerMenuItem.style.display = shouldHide ? "none" : "";
+        }
       })();
     </script>
   </body>
