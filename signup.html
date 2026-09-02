@@ -495,6 +495,8 @@
     </main>
 
     <script>
+      const API_BASE_URL = "http://localhost:8080/api/auth";
+
       (function () {
         const form = document.getElementById("signup-phone-form");
         const stepPhone = document.getElementById("signup-step-phone");
@@ -573,21 +575,38 @@
         mobile.addEventListener("input", validate);
         mobile.addEventListener("blur", validate);
 
-        form.addEventListener("submit", (e) => {
+        form.addEventListener("submit", async (e) => {
           e.preventDefault();
           if (!validate()) return;
-          stepPhone.hidden = true;
-          stepOtp.hidden = false;
-          if (otpSentTo && countryCode) {
-            otpSentTo.textContent =
-              "We sent a code to " +
-              countryCode.value +
-              " " +
-              mobile.value +
-              ".";
+          submitBtn.disabled = true;
+          const mobileNumber = countryCode.value + mobile.value;
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/request-otp`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ mobile: mobileNumber }),
+            });
+
+            if (!response.ok) throw new Error("OTP request failed");
+
+            stepPhone.hidden = true;
+            stepOtp.hidden = false;
+            if (otpSentTo && countryCode) {
+              otpSentTo.textContent =
+                "We sent a code to " +
+                countryCode.value +
+                " " +
+                mobile.value +
+                ".";
+            }
+            const firstOtp = stepOtp.querySelector(".otp-cell");
+            firstOtp?.focus();
+          } catch (error) {
+            errorEl.textContent =
+              "Unable to send the OTP. Please start the backend and try again.";
+            submitBtn.disabled = false;
           }
-          const firstOtp = stepOtp.querySelector(".otp-cell");
-          firstOtp?.focus();
         });
 
         validate();
@@ -696,13 +715,35 @@
           });
         });
 
-        verifyBtn.addEventListener("click", () => {
+        verifyBtn.addEventListener("click", async () => {
           if (getOtpString().length !== 4) return;
           if (otpError) otpError.textContent = "";
-          if (otpSuccess) {
-            otpSuccess.textContent =
-              "Your account created you are successfully logged in!";
-            otpSuccess.hidden = false;
+          verifyBtn.disabled = true;
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/verify-otp`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                mobile:
+                  document.getElementById("country-code").value +
+                  document.getElementById("mobile").value,
+                otp: getOtpString(),
+              }),
+            });
+
+            if (!response.ok) throw new Error("OTP verification failed");
+
+            const result = await response.json();
+            sessionStorage.setItem("healthAuthToken", result.token);
+            if (otpSuccess) {
+              otpSuccess.textContent =
+                "Your account created you are successfully logged in!";
+              otpSuccess.hidden = false;
+            }
+          } catch (error) {
+            if (otpError) otpError.textContent = "Invalid or expired OTP.";
+            verifyBtn.disabled = false;
           }
         });
 
@@ -717,6 +758,9 @@
             otpSuccess.textContent = "";
             otpSuccess.hidden = true;
           }
+          document
+            .getElementById("signup-phone-form")
+            ?.querySelector("button[type=submit]").disabled = false;
           startTimer();
           cells[0].focus();
         });
