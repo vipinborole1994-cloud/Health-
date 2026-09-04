@@ -106,6 +106,62 @@
         min-height: 20px;
         color: #0f172a;
       }
+      .specialty-manager {
+        margin-top: 28px;
+        padding-top: 22px;
+        border-top: 1px solid #e5e7eb;
+      }
+      .specialty-manager h2 {
+        margin-bottom: 8px;
+      }
+      .specialty-hint {
+        margin: 0 0 16px;
+        color: #64748b;
+        line-height: 1.5;
+      }
+      .specialty-list {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .specialty-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+      }
+      .specialty-item span {
+        font-weight: 600;
+      }
+      .specialty-remove {
+        padding: 8px 12px;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        background: #fef2f2;
+        color: #b91c1c;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .specialty-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 10px;
+      }
+      .specialty-form input {
+        min-width: 0;
+        padding: 11px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font: inherit;
+      }
+      @media (max-width: 640px) {
+        .specialty-form {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
@@ -156,6 +212,32 @@
           </div>
         </div>
 
+        <section
+          class="specialty-manager"
+          aria-label="Consulting specialty controls"
+        >
+          <h2>Consulting specialties</h2>
+          <p class="specialty-hint">
+            Add new options or remove options from the Health Consulting page.
+          </p>
+          <div class="specialty-list" id="specialty-list"></div>
+          <form class="specialty-form" id="specialty-form">
+            <input
+              id="specialty-title"
+              type="text"
+              placeholder="Specialty name"
+              required
+            />
+            <input
+              id="specialty-description"
+              type="text"
+              placeholder="Short description"
+              required
+            />
+            <button type="submit" class="btn btn-save">Add option</button>
+          </form>
+        </section>
+
         <div class="actions">
           <button type="button" class="btn btn-save" id="save-settings">
             Save settings
@@ -177,7 +259,59 @@
         consulting: "superAdmin:showConsulting",
         search: "superAdmin:showSearch",
         developer: "superAdmin:showDeveloper",
+        consultingOptions: "superAdmin:consultingOptions",
       };
+
+      const defaultConsultingOptions = [
+        {
+          title: "OPT / Optometry",
+          description:
+            "Eye examinations, glasses guidance, and everyday vision care.",
+          image:
+            "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
+          alt: "Optometrist examining a patient's eyes",
+        },
+        {
+          title: "Child Care",
+          description:
+            "Pediatric advice for your child's growth, wellness, and care.",
+          image:
+            "https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=80",
+          alt: "Child receiving friendly health care",
+        },
+        {
+          title: "Vision Care",
+          description:
+            "Support for eye strain, vision concerns, and regular checkups.",
+          image:
+            "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=80",
+          alt: "Eyeglasses for vision care",
+        },
+        {
+          title: "Heart Care",
+          description:
+            "Cardiovascular guidance, prevention advice, and follow-up care.",
+          image:
+            "https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=800&q=80",
+          alt: "Heart health monitor and stethoscope",
+        },
+        {
+          title: "Lung & Respiratory Care",
+          description:
+            "Help with breathing concerns, respiratory health, and wellness.",
+          image:
+            "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&q=80",
+          alt: "Doctor supporting respiratory care",
+        },
+        {
+          title: "General Physician",
+          description:
+            "First-step guidance for common symptoms and general health.",
+          image:
+            "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80",
+          alt: "General physician consulting with a patient",
+        },
+      ];
 
       const controls = {
         food: document.getElementById("toggle-food"),
@@ -188,6 +322,51 @@
 
       const developerButton = document.getElementById("toggle-developer");
       const status = document.getElementById("status-message");
+      const specialtyList = document.getElementById("specialty-list");
+      const specialtyForm = document.getElementById("specialty-form");
+      let consultingOptions = loadConsultingOptions();
+
+      function loadConsultingOptions() {
+        try {
+          const stored = JSON.parse(
+            localStorage.getItem(keys.consultingOptions),
+          );
+          return Array.isArray(stored) ? stored : defaultConsultingOptions;
+        } catch {
+          return defaultConsultingOptions;
+        }
+      }
+
+      function renderSpecialtyList() {
+        if (!specialtyList) return;
+        specialtyList.innerHTML = "";
+        consultingOptions.forEach((option, index) => {
+          const row = document.createElement("div");
+          row.className = "specialty-item";
+          const name = document.createElement("span");
+          name.textContent = option.title;
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "specialty-remove";
+          remove.textContent = "Remove";
+          remove.addEventListener("click", () => {
+            consultingOptions.splice(index, 1);
+            renderSpecialtyList();
+            saveConsultingOptions();
+          });
+          row.append(name, remove);
+          specialtyList.appendChild(row);
+        });
+      }
+
+      function saveConsultingOptions() {
+        localStorage.setItem(
+          keys.consultingOptions,
+          JSON.stringify(consultingOptions),
+        );
+        status.textContent =
+          "Consulting specialties saved. Refresh the consulting page to apply changes.";
+      }
 
       function getStoredValue(key) {
         const value = localStorage.getItem(key);
@@ -242,6 +421,11 @@
       function resetSettings() {
         Object.values(keys).forEach((key) => localStorage.removeItem(key));
         loadSettings();
+        consultingOptions = defaultConsultingOptions.map((option) => ({
+          ...option,
+        }));
+        localStorage.removeItem(keys.consultingOptions);
+        renderSpecialtyList();
         status.textContent = "Settings reset to defaults.";
       }
 
@@ -254,8 +438,29 @@
       if (developerButton) {
         developerButton.addEventListener("click", toggleDeveloperOption);
       }
+      if (specialtyForm) {
+        specialtyForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const title = document.getElementById("specialty-title").value.trim();
+          const description = document
+            .getElementById("specialty-description")
+            .value.trim();
+          if (!title || !description) return;
+          consultingOptions.push({
+            title,
+            description,
+            image:
+              "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
+            alt: `${title} consultation`,
+          });
+          specialtyForm.reset();
+          renderSpecialtyList();
+          saveConsultingOptions();
+        });
+      }
 
       loadSettings();
+      renderSpecialtyList();
     </script>
   </body>
 </html>

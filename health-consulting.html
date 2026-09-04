@@ -103,6 +103,38 @@
         box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
         border: 1px solid rgba(15, 23, 42, 0.08);
       }
+      .consult-card-link {
+        display: block;
+        height: 100%;
+        box-sizing: border-box;
+        color: inherit;
+        text-decoration: none;
+        transition: background 0.15s ease;
+      }
+      .consult-card-link:hover,
+      .consult-card-link:focus-visible {
+        background: #f0fdf4;
+      }
+      .consult-card-link:focus-visible {
+        outline: 3px solid rgba(14, 165, 233, 0.45);
+        outline-offset: -3px;
+      }
+      .consult-card-image-wrap {
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: #e2e8f0;
+      }
+      .consult-card-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.25s ease;
+      }
+      .consult-card-link:hover .consult-card-image,
+      .consult-card-link:focus-visible .consult-card-image {
+        transform: scale(1.04);
+      }
       .consult-card-body {
         padding: 18px;
       }
@@ -116,6 +148,14 @@
         margin: 0;
         color: #475569;
         line-height: 1.6;
+      }
+      .selection-feedback {
+        margin: 24px 0 0;
+        padding: 16px 18px;
+        border-left: 4px solid #22c55e;
+        background: #f0fdf4;
+        color: #166534;
+        line-height: 1.5;
       }
       .content {
         max-width: 980px;
@@ -149,8 +189,8 @@
     <header>
       <h1>Health Consulting</h1>
       <p>
-        Book a consultation, get personalized health advice, and connect with
-        experts.
+        Choose a specialty, get personalized health advice, and connect with the
+        right care team.
       </p>
       <div class="page-actions">
         <a class="link-button" href="health.html">Back to Home</a>
@@ -186,41 +226,115 @@
     </header>
 
     <main class="content">
-      <div class="grid">
-        <article class="consult-card">
-          <div class="consult-card-body">
-            <h2 class="consult-card-title">Nutrition Consultation</h2>
-            <p class="consult-card-text">
-              One-on-one advice to build a meal plan that matches your wellness
-              goals.
-            </p>
-          </div>
-        </article>
-        <article class="consult-card">
-          <div class="consult-card-body">
-            <h2 class="consult-card-title">Fitness Assessment</h2>
-            <p class="consult-card-text">
-              Personalized training recommendations based on your lifestyle and
-              health data.
-            </p>
-          </div>
-        </article>
-        <article class="consult-card">
-          <div class="consult-card-body">
-            <h2 class="consult-card-title">Wellness Coaching</h2>
-            <p class="consult-card-text">
-              Ongoing support to develop healthier habits and manage stress
-              effectively.
-            </p>
-          </div>
-        </article>
-      </div>
+      <div class="grid" id="consulting-grid"></div>
+      <p id="consultation-request" class="selection-feedback">
+        Select a specialty above to continue with consultation booking.
+      </p>
     </main>
 
     <footer>Copyright &copy; <span id="year"></span></footer>
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
+
+      const defaultConsultingOptions = [
+        {
+          title: "OPT / Optometry",
+          description:
+            "Eye examinations, glasses guidance, and everyday vision care.",
+          image:
+            "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
+          alt: "Optometrist examining a patient's eyes",
+        },
+        {
+          title: "Child Care",
+          description:
+            "Pediatric advice for your child's growth, wellness, and care.",
+          image:
+            "https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=80",
+          alt: "Child receiving friendly health care",
+        },
+        {
+          title: "Vision Care",
+          description:
+            "Support for eye strain, vision concerns, and regular checkups.",
+          image:
+            "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&q=80",
+          alt: "Eyeglasses for vision care",
+        },
+        {
+          title: "Heart Care",
+          description:
+            "Cardiovascular guidance, prevention advice, and follow-up care.",
+          image:
+            "https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=800&q=80",
+          alt: "Heart health monitor and stethoscope",
+        },
+        {
+          title: "Lung & Respiratory Care",
+          description:
+            "Help with breathing concerns, respiratory health, and wellness.",
+          image:
+            "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=800&q=80",
+          alt: "Doctor supporting respiratory care",
+        },
+        {
+          title: "General Physician",
+          description:
+            "First-step guidance for common symptoms and general health.",
+          image:
+            "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80",
+          alt: "General physician consulting with a patient",
+        },
+      ];
+
+      function getConsultingOptions() {
+        try {
+          const stored = JSON.parse(
+            localStorage.getItem("superAdmin:consultingOptions"),
+          );
+          return Array.isArray(stored) ? stored : defaultConsultingOptions;
+        } catch {
+          return defaultConsultingOptions;
+        }
+      }
+
+      function escapeHtml(value) {
+        return String(value).replace(
+          /[&<>"']/g,
+          (character) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[character],
+        );
+      }
+
+      function renderConsultingOptions() {
+        const grid = document.getElementById("consulting-grid");
+        if (!grid) return;
+        grid.innerHTML = getConsultingOptions()
+          .map(
+            (option) => `
+              <article class="consult-card">
+                  <a class="consult-card-link" href="#consultation-request" data-specialty="${escapeHtml(option.title)}">
+                  <div class="consult-card-image-wrap">
+                    <img class="consult-card-image" src="${escapeHtml(option.image)}" alt="${escapeHtml(option.alt)}" width="800" height="500" loading="lazy" />
+                  </div>
+                  <div class="consult-card-body">
+                    <h2 class="consult-card-title">${escapeHtml(option.title)}</h2>
+                    <p class="consult-card-text">${escapeHtml(option.description)}</p>
+                  </div>
+                </a>
+              </article>`,
+          )
+          .join("");
+      }
+
+      renderConsultingOptions();
 
       (function () {
         const form = document.getElementById("consult-search-form");
@@ -262,6 +376,16 @@
             );
           });
         }
+
+        document.querySelectorAll("[data-specialty]").forEach((link) => {
+          link.addEventListener("click", () => {
+            const specialty = link.dataset.specialty;
+            const selection = document.getElementById("consultation-request");
+            if (selection && specialty) {
+              selection.textContent = `${specialty} selected. Consultation booking will be available soon.`;
+            }
+          });
+        });
       })();
     </script>
   </body>
