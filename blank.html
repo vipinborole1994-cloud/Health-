@@ -72,6 +72,91 @@
           sans-serif;
       }
 
+      .site-cart {
+        position: fixed;
+        top: 18px;
+        right: 18px;
+        z-index: 10;
+      }
+
+      .site-cart-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 13px;
+        border: 1px solid #cfe0cf;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--leaf);
+        cursor: pointer;
+        font:
+          700 0.84rem Arial,
+          sans-serif;
+        box-shadow: 0 8px 22px rgba(34, 77, 52, 0.12);
+      }
+
+      .site-cart-button svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .site-cart-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        width: 245px;
+        padding: 16px;
+        border: 1px solid #dce9dc;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 14px 30px rgba(34, 77, 52, 0.16);
+        color: var(--ink);
+        font:
+          0.88rem/1.45 Arial,
+          sans-serif;
+      }
+
+      .site-cart-menu[hidden] {
+        display: none;
+      }
+
+      .site-cart-menu strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .site-cart-items {
+        margin-top: 12px;
+        border-top: 1px solid #e5eee5;
+      }
+      .site-cart-item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        padding: 10px 0;
+        border-bottom: 1px solid #eef3ee;
+      }
+      .site-cart-item-name {
+        font-weight: 700;
+      }
+      .site-cart-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+      }
+      .site-cart-item-actions button {
+        padding: 2px 7px;
+        border: 1px solid #cfe0cf;
+        border-radius: 4px;
+        background: #fff;
+        color: var(--leaf);
+        cursor: pointer;
+      }
+      .site-cart-item-actions .remove-item {
+        border: 0;
+        color: #9b3d35;
+      }
+
       .salad-grid {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
@@ -186,6 +271,36 @@
     </style>
   </head>
   <body>
+    <div class="site-cart">
+      <button
+        class="site-cart-button"
+        id="site-cart-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-cart-menu"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <circle cx="9" cy="21" r="1" />
+          <circle cx="20" cy="21" r="1" />
+          <path
+            d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+          />
+        </svg>
+        <span id="site-cart-count">0</span>
+      </button>
+      <div class="site-cart-menu" id="site-cart-menu" hidden>
+        <strong>Cart</strong>
+        <span id="site-cart-summary">Cart is empty</span>
+        <div id="site-cart-items" class="site-cart-items"></div>
+      </div>
+    </div>
+
     <main class="page">
       <p class="eyebrow">Fresh salad kit</p>
       <h1>Choose your healthy bowl.</h1>
@@ -291,6 +406,7 @@
           button.textContent = "Added to cart";
           button.classList.add("added");
           renderCartCount();
+          renderSiteCart();
 
           window.setTimeout(() => {
             button.textContent = "Add to cart";
@@ -300,6 +416,71 @@
       });
 
       renderCartCount();
+
+      const siteCartButton = document.getElementById("site-cart-button");
+      const siteCartMenu = document.getElementById("site-cart-menu");
+      const siteCartCount = document.getElementById("site-cart-count");
+      const siteCartSummary = document.getElementById("site-cart-summary");
+      const siteCartItems = document.getElementById("site-cart-items");
+      const siteCartKeys = [
+        "freshSaladCart",
+        "wholeGrainCart",
+        "healthySnacksCart",
+      ];
+
+      function renderSiteCart() {
+        const allItems = siteCartKeys.flatMap((key) =>
+          JSON.parse(localStorage.getItem(key) || "[]").map((item) => ({
+            ...item,
+            key,
+          })),
+        );
+        const total = allItems.reduce((sum, item) => sum + item.quantity, 0);
+        siteCartCount.textContent = total;
+        siteCartSummary.textContent =
+          total === 0
+            ? "Cart is empty"
+            : `${total} item${total === 1 ? "" : "s"} in your cart`;
+        siteCartItems.innerHTML = allItems
+          .map(
+            (item, index) =>
+              `<div class="site-cart-item"><div><div class="site-cart-item-name">${item.name}</div><div class="site-cart-item-actions"><button type="button" data-cart-action="decrease" data-cart-index="${index}">-</button><span>${item.quantity}</span><button type="button" data-cart-action="increase" data-cart-index="${index}">+</button><button type="button" class="remove-item" data-cart-action="remove" data-cart-index="${index}">Remove</button></div></div></div>`,
+          )
+          .join("");
+        siteCartItems.hidden = allItems.length === 0;
+        siteCartItems.querySelectorAll("button").forEach((button) => {
+          button.addEventListener("click", () => {
+            const item = allItems[Number(button.dataset.cartIndex)];
+            const items = JSON.parse(localStorage.getItem(item.key) || "[]");
+            const storedItem = items.find((entry) => entry.name === item.name);
+            if (button.dataset.cartAction === "remove") storedItem.quantity = 0;
+            else
+              storedItem.quantity +=
+                button.dataset.cartAction === "increase" ? 1 : -1;
+            localStorage.setItem(
+              item.key,
+              JSON.stringify(items.filter((entry) => entry.quantity > 0)),
+            );
+            cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+            renderCartCount();
+            renderSiteCart();
+          });
+        });
+      }
+
+      siteCartButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        siteCartMenu.hidden = !siteCartMenu.hidden;
+        siteCartButton.setAttribute(
+          "aria-expanded",
+          String(!siteCartMenu.hidden),
+        );
+      });
+      document.addEventListener("click", () => {
+        siteCartMenu.hidden = true;
+        siteCartButton.setAttribute("aria-expanded", "false");
+      });
+      renderSiteCart();
     </script>
   </body>
 </html>

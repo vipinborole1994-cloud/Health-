@@ -250,6 +250,35 @@
         font-size: 0.875rem;
         color: #64748b;
       }
+      .shared-cart-items {
+        margin-top: 10px;
+        border-top: 1px solid #e2e8f0;
+      }
+      .shared-cart-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .shared-cart-item-name {
+        font-weight: 600;
+      }
+      .shared-cart-item-actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+      }
+      .shared-cart-item-actions button {
+        padding: 2px 7px;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        background: #fff;
+        color: #0369a1;
+        cursor: pointer;
+      }
+      .shared-cart-item-actions .remove-item {
+        border: 0;
+        color: #9b3d35;
+      }
       .cart-items-panel[hidden] {
         display: none !important;
       }
@@ -513,6 +542,7 @@
               <p class="cart-items-placeholder">
                 Item list will appear when you add products.
               </p>
+              <div id="shared-cart-items" class="shared-cart-items"></div>
             </div>
           </div>
         </div>
@@ -670,9 +700,69 @@
         const itemsSummary = document.getElementById("cart-items-summary");
         if (!wrap || !btn || !menu || !emptyPanel || !itemsPanel) return;
 
+        const cartKeys = [
+          "freshSaladCart",
+          "wholeGrainCart",
+          "healthySnacksCart",
+        ];
         let cartItemCount = 0;
 
+        function readCartItems() {
+          return cartKeys.flatMap((key) =>
+            JSON.parse(localStorage.getItem(key) || "[]").map((item) => ({
+              ...item,
+              key,
+            })),
+          );
+        }
+
+        function renderCartItems() {
+          const list = document.getElementById("shared-cart-items");
+          if (!list) return;
+          const items = readCartItems();
+          const placeholder = document.querySelector(".cart-items-placeholder");
+          if (placeholder) placeholder.hidden = items.length > 0;
+          list.innerHTML = items
+            .map(
+              (item, index) =>
+                `<div class="shared-cart-item"><div class="shared-cart-item-name">${item.name}</div><div class="shared-cart-item-actions"><button type="button" data-cart-action="decrease" data-cart-index="${index}">-</button><span>${item.quantity}</span><button type="button" data-cart-action="increase" data-cart-index="${index}">+</button><button type="button" class="remove-item" data-cart-action="remove" data-cart-index="${index}">Remove</button></div></div>`,
+            )
+            .join("");
+          list.querySelectorAll("button").forEach((button) => {
+            button.addEventListener("click", (event) => {
+              event.stopPropagation();
+              const item = items[Number(button.dataset.cartIndex)];
+              const storedItems = JSON.parse(
+                localStorage.getItem(item.key) || "[]",
+              );
+              const storedItem = storedItems.find(
+                (entry) => entry.name === item.name,
+              );
+              if (button.dataset.cartAction === "remove")
+                storedItem.quantity = 0;
+              else
+                storedItem.quantity +=
+                  button.dataset.cartAction === "increase" ? 1 : -1;
+              localStorage.setItem(
+                item.key,
+                JSON.stringify(
+                  storedItems.filter((entry) => entry.quantity > 0),
+                ),
+              );
+              cartItemCount = readCartItems().reduce(
+                (sum, entry) => sum + entry.quantity,
+                0,
+              );
+              syncCartPanels();
+            });
+          });
+        }
+
         function syncCartPanels() {
+          cartItemCount = readCartItems().reduce(
+            (sum, item) => sum + item.quantity,
+            0,
+          );
           const isEmpty = cartItemCount <= 0;
           emptyPanel.hidden = !isEmpty;
           itemsPanel.hidden = isEmpty;
@@ -682,6 +772,7 @@
                 ? "1 item in your cart"
                 : `${cartItemCount} items in your cart`;
           }
+          renderCartItems();
         }
 
         function closeCartMenu() {
@@ -744,6 +835,7 @@
         };
 
         syncCartPanels();
+        window.addEventListener("storage", syncCartPanels);
       })();
 
       (function () {
