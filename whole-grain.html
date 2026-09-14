@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Whole Grain Breakfast</title>
+    <style>
+      :root {
+        --ink: #3b2a1e;
+        --muted: #77685d;
+        --grain: #a86b2a;
+        --oat: #fff7e8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--oat);
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      .page {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 64px 0 72px;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--grain);
+        font:
+          700 0.78rem/1.2 Arial,
+          sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 700px;
+        margin: 0;
+        font-size: clamp(2.6rem, 6vw, 5.2rem);
+        line-height: 0.98;
+        font-weight: 500;
+      }
+
+      .intro {
+        max-width: 620px;
+        margin: 22px 0 42px;
+        color: var(--muted);
+        font:
+          1.05rem/1.6 Arial,
+          sans-serif;
+      }
+
+      .grain-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 18px;
+      }
+
+      .grain-tile {
+        grid-column: span 4;
+        overflow: hidden;
+        padding: 0;
+        border: 1px solid #eadcc7;
+        border-radius: 8px;
+        background: #fff;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease;
+      }
+
+      .grain-tile:first-child,
+      .grain-tile:nth-child(2) {
+        grid-column: span 6;
+      }
+
+      .grain-tile:hover,
+      .grain-tile:focus-visible {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px rgba(112, 73, 32, 0.15);
+        outline: none;
+      }
+
+      .grain-tile img {
+        display: block;
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+      }
+
+      .grain-info {
+        display: block;
+        padding: 20px 20px 22px;
+      }
+
+      .grain-info h2 {
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      .grain-info p {
+        margin: 0;
+        color: var(--muted);
+        font:
+          0.92rem/1.5 Arial,
+          sans-serif;
+      }
+
+      .tag {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #f8ead4;
+        color: var(--grain);
+        font:
+          700 0.72rem Arial,
+          sans-serif;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 0 50px;
+        }
+
+        .grain-tile,
+        .grain-tile:first-child,
+        .grain-tile:nth-child(2) {
+          grid-column: 1 / -1;
+        }
+
+        .grain-tile img {
+          height: 210px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <p class="eyebrow">Whole grain breakfast</p>
+      <h1>Start with something nourishing.</h1>
+      <p class="intro">
+        Five satisfying breakfast bowls made with whole grains, fruit, nuts, and
+        seeds for steady morning energy.
+      </p>
+
+      <section class="grain-grid" aria-label="Whole grain breakfast options">
+        <button class="grain-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=900&q=80"
+            alt="Berry overnight oats"
+          />
+          <span class="grain-info">
+            <h2>Berry Overnight Oats</h2>
+            <p>Rolled oats, berries, chia seeds, and creamy yogurt.</p>
+            <span class="tag">High fibre</span>
+          </span>
+        </button>
+
+        <button class="grain-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=900&q=80"
+            alt="Banana walnut porridge"
+          />
+          <span class="grain-info">
+            <h2>Banana Walnut Porridge</h2>
+            <p>Warm oats, banana, walnuts, cinnamon, and maple.</p>
+            <span class="tag">Heart healthy</span>
+          </span>
+        </button>
+
+        <button class="grain-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=900&q=80"
+            alt="Avocado whole grain toast"
+          />
+          <span class="grain-info">
+            <h2>Avocado Grain Toast</h2>
+            <p>Seeded whole grain toast, avocado, tomato, and herbs.</p>
+            <span class="tag">Plant powered</span>
+          </span>
+        </button>
+
+        <button class="grain-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=900&q=80"
+            alt="Whole grain fruit pancakes"
+          />
+          <span class="grain-info">
+            <h2>Fruit Grain Pancakes</h2>
+            <p>Whole wheat pancakes, fresh fruit, and almond butter.</p>
+            <span class="tag">Naturally sweet</span>
+          </span>
+        </button>
+
+        <button class="grain-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1494597564530-871f2b93ac55?w=900&q=80"
+            alt="Apple cinnamon muesli"
+          />
+          <span class="grain-info">
+            <h2>Apple Cinnamon Muesli</h2>
+            <p>Toasted grains, apple, raisins, seeds, and warm spice.</p>
+            <span class="tag">Energy boost</span>
+          </span>
+        </button>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll(".grain-tile").forEach((tile) => {
+        tile.addEventListener("click", () => {
+          document.querySelectorAll(".grain-tile").forEach((item) => {
+            item.removeAttribute("aria-pressed");
+          });
+          tile.setAttribute("aria-pressed", "true");
+        });
+      });
+    </script>
+  </body>
+</html>

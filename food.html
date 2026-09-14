@@ -350,7 +350,7 @@
             </div>
           </div>
         </article>
-        <article class="product-card">
+        <article class="product-card" data-product="Whole grain breakfast">
           <img
             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900&q=80"
             alt="Whole grain breakfast"
@@ -422,6 +422,9 @@
       const firstFreshSaladCard = document.querySelector(
         '.product-card[data-product="Fresh salad kit"]',
       );
+      const wholeGrainCard = document.querySelector(
+        '.product-card[data-product="Whole grain breakfast"]',
+      );
 
       if (firstFreshSaladCard) {
         firstFreshSaladCard.addEventListener("click", () => {
@@ -429,8 +432,14 @@
         });
       }
 
+      if (wholeGrainCard) {
+        wholeGrainCard.addEventListener("click", () => {
+          window.location.href = "whole-grain.html";
+        });
+      }
+
       document.querySelectorAll(".product-card").forEach((card) => {
-        if (card === firstFreshSaladCard) return;
+        if (card === firstFreshSaladCard || card === wholeGrainCard) return;
 
         card.addEventListener("click", () => {
           const product = card.dataset.product;
