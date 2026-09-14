@@ -57,6 +57,20 @@
           sans-serif;
       }
 
+      .cart-status {
+        display: inline-flex;
+        gap: 8px;
+        margin: 0 0 28px;
+        padding: 10px 14px;
+        border: 1px solid #dfe6d8;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--green);
+        font:
+          700 0.86rem Arial,
+          sans-serif;
+      }
+
       .snack-grid {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
@@ -116,6 +130,30 @@
           sans-serif;
       }
 
+      .add-to-cart {
+        margin: 0 20px 20px;
+        padding: 11px 14px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--green);
+        color: #fff;
+        cursor: pointer;
+        font:
+          700 0.84rem Arial,
+          sans-serif;
+      }
+
+      .add-to-cart:hover,
+      .add-to-cart:focus-visible {
+        background: #3e5c37;
+        outline: 3px solid #cfe1bf;
+        outline-offset: 2px;
+      }
+
+      .add-to-cart.added {
+        background: #8a6a2d;
+      }
+
       .tag {
         display: inline-block;
         margin-top: 16px;
@@ -156,8 +194,12 @@
         roasted ingredients for easy everyday energy.
       </p>
 
+      <p class="cart-status" aria-live="polite">
+        Cart: <span id="cart-count">0</span> items
+      </p>
+
       <section class="snack-grid" aria-label="Healthy snack options">
-        <button class="snack-tile" type="button">
+        <article class="snack-tile">
           <img
             src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=900&q=80"
             alt="Fruit and nut trail mix"
@@ -167,9 +209,10 @@
             <p>Almonds, walnuts, pumpkin seeds, raisins, and dried berries.</p>
             <span class="tag">Protein rich</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="snack-tile" type="button">
+        <article class="snack-tile">
           <img
             src="https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=900&q=80"
             alt="Fresh apple slices with nuts"
@@ -179,9 +222,10 @@
             <p>Crisp apple slices, sunflower seed butter, and cinnamon.</p>
             <span class="tag">Fresh fruit</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="snack-tile" type="button">
+        <article class="snack-tile">
           <img
             src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=900&q=80"
             alt="Healthy vegetable snack plate"
@@ -191,9 +235,10 @@
             <p>Carrot, cucumber, peppers, snap peas, and creamy hummus.</p>
             <span class="tag">Vegetable packed</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="snack-tile" type="button">
+        <article class="snack-tile">
           <img
             src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=900&q=80"
             alt="Yogurt berry parfait"
@@ -203,9 +248,10 @@
             <p>Greek yogurt, berries, toasted oats, and a little honey.</p>
             <span class="tag">Calcium source</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="snack-tile" type="button">
+        <article class="snack-tile">
           <img
             src="https://images.unsplash.com/photo-1547592180-85f173990554?w=900&q=80"
             alt="Roasted chickpea snack"
@@ -215,19 +261,45 @@
             <p>Crunchy chickpeas seasoned with paprika, herbs, and lemon.</p>
             <span class="tag">High fibre</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
       </section>
     </main>
 
     <script>
-      document.querySelectorAll(".snack-tile").forEach((tile) => {
-        tile.addEventListener("click", () => {
-          document.querySelectorAll(".snack-tile").forEach((item) => {
-            item.removeAttribute("aria-pressed");
-          });
-          tile.setAttribute("aria-pressed", "true");
+      const cartCount = document.getElementById("cart-count");
+      const cartKey = "healthySnacksCart";
+      let cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+
+      function renderCartCount() {
+        cartCount.textContent = cart.reduce(
+          (total, item) => total + item.quantity,
+          0,
+        );
+      }
+
+      document.querySelectorAll(".add-to-cart").forEach((button) => {
+        button.addEventListener("click", () => {
+          const tile = button.closest(".snack-tile");
+          const name = tile.querySelector("h2").textContent;
+          const existingItem = cart.find((item) => item.name === name);
+
+          if (existingItem) existingItem.quantity += 1;
+          else cart.push({ name, quantity: 1 });
+
+          localStorage.setItem(cartKey, JSON.stringify(cart));
+          button.textContent = "Added to cart";
+          button.classList.add("added");
+          renderCartCount();
+
+          window.setTimeout(() => {
+            button.textContent = "Add to cart";
+            button.classList.remove("added");
+          }, 1200);
         });
       });
+
+      renderCartCount();
     </script>
   </body>
 </html>

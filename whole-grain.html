@@ -57,6 +57,20 @@
           sans-serif;
       }
 
+      .cart-status {
+        display: inline-flex;
+        gap: 8px;
+        margin: 0 0 28px;
+        padding: 10px 14px;
+        border: 1px solid #eadcc7;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--grain);
+        font:
+          700 0.86rem Arial,
+          sans-serif;
+      }
+
       .grain-grid {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
@@ -116,6 +130,30 @@
           sans-serif;
       }
 
+      .add-to-cart {
+        margin: 0 20px 20px;
+        padding: 11px 14px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--grain);
+        color: #fff;
+        cursor: pointer;
+        font:
+          700 0.84rem Arial,
+          sans-serif;
+      }
+
+      .add-to-cart:hover,
+      .add-to-cart:focus-visible {
+        background: #87541e;
+        outline: 3px solid #f1d8b5;
+        outline-offset: 2px;
+      }
+
+      .add-to-cart.added {
+        background: #53754a;
+      }
+
       .tag {
         display: inline-block;
         margin-top: 16px;
@@ -156,8 +194,12 @@
         seeds for steady morning energy.
       </p>
 
+      <p class="cart-status" aria-live="polite">
+        Cart: <span id="cart-count">0</span> items
+      </p>
+
       <section class="grain-grid" aria-label="Whole grain breakfast options">
-        <button class="grain-tile" type="button">
+        <article class="grain-tile">
           <img
             src="https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=900&q=80"
             alt="Berry overnight oats"
@@ -167,9 +209,10 @@
             <p>Rolled oats, berries, chia seeds, and creamy yogurt.</p>
             <span class="tag">High fibre</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="grain-tile" type="button">
+        <article class="grain-tile">
           <img
             src="https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=900&q=80"
             alt="Banana walnut porridge"
@@ -179,9 +222,10 @@
             <p>Warm oats, banana, walnuts, cinnamon, and maple.</p>
             <span class="tag">Heart healthy</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="grain-tile" type="button">
+        <article class="grain-tile">
           <img
             src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=900&q=80"
             alt="Avocado whole grain toast"
@@ -191,9 +235,10 @@
             <p>Seeded whole grain toast, avocado, tomato, and herbs.</p>
             <span class="tag">Plant powered</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="grain-tile" type="button">
+        <article class="grain-tile">
           <img
             src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=900&q=80"
             alt="Whole grain fruit pancakes"
@@ -203,9 +248,10 @@
             <p>Whole wheat pancakes, fresh fruit, and almond butter.</p>
             <span class="tag">Naturally sweet</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="grain-tile" type="button">
+        <article class="grain-tile">
           <img
             src="https://images.unsplash.com/photo-1494597564530-871f2b93ac55?w=900&q=80"
             alt="Apple cinnamon muesli"
@@ -215,19 +261,45 @@
             <p>Toasted grains, apple, raisins, seeds, and warm spice.</p>
             <span class="tag">Energy boost</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
       </section>
     </main>
 
     <script>
-      document.querySelectorAll(".grain-tile").forEach((tile) => {
-        tile.addEventListener("click", () => {
-          document.querySelectorAll(".grain-tile").forEach((item) => {
-            item.removeAttribute("aria-pressed");
-          });
-          tile.setAttribute("aria-pressed", "true");
+      const cartCount = document.getElementById("cart-count");
+      const cartKey = "wholeGrainCart";
+      let cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+
+      function renderCartCount() {
+        cartCount.textContent = cart.reduce(
+          (total, item) => total + item.quantity,
+          0,
+        );
+      }
+
+      document.querySelectorAll(".add-to-cart").forEach((button) => {
+        button.addEventListener("click", () => {
+          const tile = button.closest(".grain-tile");
+          const name = tile.querySelector("h2").textContent;
+          const existingItem = cart.find((item) => item.name === name);
+
+          if (existingItem) existingItem.quantity += 1;
+          else cart.push({ name, quantity: 1 });
+
+          localStorage.setItem(cartKey, JSON.stringify(cart));
+          button.textContent = "Added to cart";
+          button.classList.add("added");
+          renderCartCount();
+
+          window.setTimeout(() => {
+            button.textContent = "Add to cart";
+            button.classList.remove("added");
+          }, 1200);
         });
       });
+
+      renderCartCount();
     </script>
   </body>
 </html>

@@ -58,6 +58,20 @@
           sans-serif;
       }
 
+      .cart-status {
+        display: inline-flex;
+        gap: 8px;
+        margin: 0 0 28px;
+        padding: 10px 14px;
+        border: 1px solid #cfe0cf;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--leaf);
+        font:
+          700 0.86rem Arial,
+          sans-serif;
+      }
+
       .salad-grid {
         display: grid;
         grid-template-columns: repeat(12, 1fr);
@@ -116,6 +130,30 @@
           sans-serif;
       }
 
+      .add-to-cart {
+        margin: 0 20px 20px;
+        padding: 11px 14px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--leaf);
+        color: #fff;
+        cursor: pointer;
+        font:
+          700 0.84rem Arial,
+          sans-serif;
+      }
+
+      .add-to-cart:hover,
+      .add-to-cart:focus-visible {
+        background: #245c40;
+        outline: 3px solid #c5dfc9;
+        outline-offset: 2px;
+      }
+
+      .add-to-cart.added {
+        background: #8a6a2d;
+      }
+
       .tag {
         display: inline-block;
         margin-top: 16px;
@@ -156,8 +194,12 @@
         herbs, and bright homemade-style dressings.
       </p>
 
+      <p class="cart-status" aria-live="polite">
+        Cart: <span id="cart-count">0</span> items
+      </p>
+
       <section class="salad-grid" aria-label="Healthy vegetarian salad options">
-        <button class="salad-tile" type="button">
+        <article class="salad-tile">
           <img
             src="https://images.unsplash.com/photo-1546793665-c74683f339c1?w=900&q=80"
             alt="Classic garden salad"
@@ -167,9 +209,10 @@
             <p>Romaine, cucumber, tomato, carrot, and lemon vinaigrette.</p>
             <span class="tag">Fresh vegetables</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="salad-tile" type="button">
+        <article class="salad-tile">
           <img
             src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&q=80"
             alt="Avocado quinoa salad"
@@ -179,9 +222,10 @@
             <p>Quinoa, avocado, greens, roasted corn, and herb dressing.</p>
             <span class="tag">Plant protein</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="salad-tile" type="button">
+        <article class="salad-tile">
           <img
             src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&q=80"
             alt="Rainbow vegetable salad"
@@ -191,9 +235,10 @@
             <p>Mixed leaves, cabbage, peppers, edamame, and sesame.</p>
             <span class="tag">High fibre</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="salad-tile" type="button">
+        <article class="salad-tile">
           <img
             src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=900&q=80"
             alt="Citrus kale salad"
@@ -203,9 +248,10 @@
             <p>Kale, orange, pumpkin seeds, mint, and citrus vinaigrette.</p>
             <span class="tag">Vitamin rich</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
 
-        <button class="salad-tile" type="button">
+        <article class="salad-tile">
           <img
             src="https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=900&q=80"
             alt="Mediterranean salad"
@@ -215,19 +261,45 @@
             <p>Greens, chickpeas, feta, olives, tomato, and fresh herbs.</p>
             <span class="tag">Vegetarian favourite</span>
           </span>
-        </button>
+          <button class="add-to-cart" type="button">Add to cart</button>
+        </article>
       </section>
     </main>
 
     <script>
-      document.querySelectorAll(".salad-tile").forEach((tile) => {
-        tile.addEventListener("click", () => {
-          document.querySelectorAll(".salad-tile").forEach((item) => {
-            item.removeAttribute("aria-pressed");
-          });
-          tile.setAttribute("aria-pressed", "true");
+      const cartCount = document.getElementById("cart-count");
+      const cartKey = "freshSaladCart";
+      let cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+
+      function renderCartCount() {
+        cartCount.textContent = cart.reduce(
+          (total, item) => total + item.quantity,
+          0,
+        );
+      }
+
+      document.querySelectorAll(".add-to-cart").forEach((button) => {
+        button.addEventListener("click", () => {
+          const tile = button.closest(".salad-tile");
+          const name = tile.querySelector("h2").textContent;
+          const existingItem = cart.find((item) => item.name === name);
+
+          if (existingItem) existingItem.quantity += 1;
+          else cart.push({ name, quantity: 1 });
+
+          localStorage.setItem(cartKey, JSON.stringify(cart));
+          button.textContent = "Added to cart";
+          button.classList.add("added");
+          renderCartCount();
+
+          window.setTimeout(() => {
+            button.textContent = "Add to cart";
+            button.classList.remove("added");
+          }, 1200);
         });
       });
+
+      renderCartCount();
     </script>
   </body>
 </html>
