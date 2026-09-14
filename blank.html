@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fresh Salad Kit</title>
+    <style>
+      :root {
+        --ink: #19352a;
+        --muted: #63766b;
+        --leaf: #2f7655;
+        --mint: #e9f4e8;
+        --cream: #fffaf1;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Georgia, "Times New Roman", serif;
+        background: var(--cream);
+        color: var(--ink);
+      }
+
+      .page {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 64px 0 72px;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--leaf);
+        font:
+          700 0.78rem/1.2 Arial,
+          sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 650px;
+        font-size: clamp(2.6rem, 6vw, 5.2rem);
+        line-height: 0.98;
+        font-weight: 500;
+      }
+
+      .intro {
+        max-width: 610px;
+        margin: 22px 0 42px;
+        color: var(--muted);
+        font:
+          1.05rem/1.6 Arial,
+          sans-serif;
+      }
+
+      .salad-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 18px;
+      }
+
+      .salad-tile {
+        grid-column: span 4;
+        overflow: hidden;
+        padding: 0;
+        border: 1px solid #dce9dc;
+        border-radius: 8px;
+        background: #fff;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease;
+      }
+
+      .salad-tile:first-child,
+      .salad-tile:nth-child(2) {
+        grid-column: span 6;
+      }
+
+      .salad-tile:hover,
+      .salad-tile:focus-visible {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px rgba(34, 77, 52, 0.14);
+        outline: none;
+      }
+
+      .salad-tile img {
+        display: block;
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+      }
+
+      .salad-info {
+        padding: 20px 20px 22px;
+      }
+
+      .salad-info h2 {
+        margin: 0 0 8px;
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      .salad-info p {
+        margin: 0;
+        color: var(--muted);
+        font:
+          0.92rem/1.5 Arial,
+          sans-serif;
+      }
+
+      .tag {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: var(--mint);
+        color: var(--leaf);
+        font:
+          700 0.72rem Arial,
+          sans-serif;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          padding: 42px 0 50px;
+        }
+
+        .salad-tile,
+        .salad-tile:first-child,
+        .salad-tile:nth-child(2) {
+          grid-column: 1 / -1;
+        }
+
+        .salad-tile img {
+          height: 210px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <p class="eyebrow">Fresh salad kit</p>
+      <h1>Choose your healthy bowl.</h1>
+      <p class="intro">
+        Five colourful vegetarian salads made with crisp vegetables, grains,
+        herbs, and bright homemade-style dressings.
+      </p>
+
+      <section class="salad-grid" aria-label="Healthy vegetarian salad options">
+        <button class="salad-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1546793665-c74683f339c1?w=900&q=80"
+            alt="Classic garden salad"
+          />
+          <span class="salad-info">
+            <h2>Classic Garden</h2>
+            <p>Romaine, cucumber, tomato, carrot, and lemon vinaigrette.</p>
+            <span class="tag">Fresh vegetables</span>
+          </span>
+        </button>
+
+        <button class="salad-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&q=80"
+            alt="Avocado quinoa salad"
+          />
+          <span class="salad-info">
+            <h2>Avocado Quinoa</h2>
+            <p>Quinoa, avocado, greens, roasted corn, and herb dressing.</p>
+            <span class="tag">Plant protein</span>
+          </span>
+        </button>
+
+        <button class="salad-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&q=80"
+            alt="Rainbow vegetable salad"
+          />
+          <span class="salad-info">
+            <h2>Rainbow Crunch</h2>
+            <p>Mixed leaves, cabbage, peppers, edamame, and sesame.</p>
+            <span class="tag">High fibre</span>
+          </span>
+        </button>
+
+        <button class="salad-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=900&q=80"
+            alt="Citrus kale salad"
+          />
+          <span class="salad-info">
+            <h2>Citrus Kale</h2>
+            <p>Kale, orange, pumpkin seeds, mint, and citrus vinaigrette.</p>
+            <span class="tag">Vitamin rich</span>
+          </span>
+        </button>
+
+        <button class="salad-tile" type="button">
+          <img
+            src="https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=900&q=80"
+            alt="Mediterranean salad"
+          />
+          <span class="salad-info">
+            <h2>Mediterranean</h2>
+            <p>Greens, chickpeas, feta, olives, tomato, and fresh herbs.</p>
+            <span class="tag">Vegetarian favourite</span>
+          </span>
+        </button>
+      </section>
+    </main>
+
+    <script>
+      document.querySelectorAll(".salad-tile").forEach((tile) => {
+        tile.addEventListener("click", () => {
+          document.querySelectorAll(".salad-tile").forEach((item) => {
+            item.removeAttribute("aria-pressed");
+          });
+          tile.setAttribute("aria-pressed", "true");
+        });
+      });
+    </script>
+  </body>
+</html>
