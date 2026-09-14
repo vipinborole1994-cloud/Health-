@@ -124,6 +124,17 @@
         display: block;
         margin-bottom: 5px;
       }
+      .remove-all-cart {
+        width: 100%;
+        margin-top: 10px;
+        padding: 8px;
+        border: 1px solid #fecaca;
+        border-radius: 5px;
+        background: #fff;
+        color: #b42318;
+        cursor: pointer;
+        font-weight: 700;
+      }
       .site-cart-items {
         margin-top: 12px;
         border-top: 1px solid #e5eee5;
@@ -298,6 +309,9 @@
         <strong>Cart</strong>
         <span id="site-cart-summary">Cart is empty</span>
         <div id="site-cart-items" class="site-cart-items"></div>
+        <button class="remove-all-cart" id="remove-all-cart" type="button">
+          Remove all
+        </button>
       </div>
     </div>
 
@@ -422,6 +436,7 @@
       const siteCartCount = document.getElementById("site-cart-count");
       const siteCartSummary = document.getElementById("site-cart-summary");
       const siteCartItems = document.getElementById("site-cart-items");
+      const removeAllCart = document.getElementById("remove-all-cart");
       const siteCartKeys = [
         "freshSaladCart",
         "wholeGrainCart",
@@ -475,6 +490,12 @@
           "aria-expanded",
           String(!siteCartMenu.hidden),
         );
+      });
+      removeAllCart.addEventListener("click", () => {
+        siteCartKeys.forEach((key) => localStorage.removeItem(key));
+        cart = [];
+        renderCartCount();
+        renderSiteCart();
       });
       document.addEventListener("click", () => {
         siteCartMenu.hidden = true;
