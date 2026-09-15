@@ -123,6 +123,17 @@
         color: #475569;
         line-height: 1.6;
       }
+      .add-to-cart {
+        width: 100%;
+        margin-top: 14px;
+        padding: 10px 14px;
+        border: 0;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%);
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+      }
       .content {
         max-width: 980px;
         margin: 0 auto;
@@ -204,6 +215,13 @@
             <p class="product-card-text">
               Immune support formula with 1000mg of vitamin C and antioxidants.
             </p>
+            <button
+              class="add-to-cart"
+              type="button"
+              data-product="Vitamin C Tablets"
+            >
+              Add to cart
+            </button>
           </div>
         </article>
         <article class="product-card">
@@ -217,6 +235,13 @@
             <p class="product-card-text">
               One daily tablet with essential vitamins, minerals, and B-complex.
             </p>
+            <button
+              class="add-to-cart"
+              type="button"
+              data-product="Daily Multivitamin"
+            >
+              Add to cart
+            </button>
           </div>
         </article>
         <article class="product-card">
@@ -230,6 +255,9 @@
             <p class="product-card-text">
               Supports bone health and mood with easy-to-take softgel tablets.
             </p>
+            <button class="add-to-cart" type="button" data-product="Vitamin D3">
+              Add to cart
+            </button>
           </div>
         </article>
       </div>
@@ -239,6 +267,25 @@
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
+
+      const vitaminCartKey = "vitaminCart";
+      let vitaminCart = JSON.parse(
+        localStorage.getItem(vitaminCartKey) || "[]",
+      );
+
+      document.querySelectorAll(".add-to-cart").forEach((button) => {
+        button.addEventListener("click", () => {
+          const name = button.dataset.product;
+          const existingItem = vitaminCart.find((item) => item.name === name);
+          if (existingItem) existingItem.quantity += 1;
+          else vitaminCart.push({ name, quantity: 1 });
+          localStorage.setItem(vitaminCartKey, JSON.stringify(vitaminCart));
+          button.textContent = "Added to cart";
+          window.setTimeout(() => {
+            button.textContent = "Add to cart";
+          }, 1000);
+        });
+      });
 
       (function () {
         const form = document.getElementById("vitamin-search-form");

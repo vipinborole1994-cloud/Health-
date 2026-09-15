@@ -549,7 +549,9 @@
               </p>
             </div>
             <div id="cart-items-panel" class="cart-items-panel" hidden>
-              <p id="cart-items-summary" class="cart-items-title">Your cart</p>
+              <p id="cart-items-summary" class="cart-items-title">
+                Products in your cart
+              </p>
               <p class="cart-items-placeholder">
                 Item list will appear when you add products.
               </p>
@@ -720,9 +722,11 @@
         if (!wrap || !btn || !menu || !emptyPanel || !itemsPanel) return;
 
         const cartKeys = [
+          "foodCart",
           "freshSaladCart",
           "wholeGrainCart",
           "healthySnacksCart",
+          "vitaminCart",
         ];
         let cartItemCount = 0;
 
@@ -861,6 +865,10 @@
 
         syncCartPanels();
         window.addEventListener("storage", syncCartPanels);
+        window.addEventListener("pageshow", syncCartPanels);
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) syncCartPanels();
+        });
       })();
 
       (function () {
